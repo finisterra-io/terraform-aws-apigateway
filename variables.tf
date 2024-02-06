@@ -1,3 +1,8 @@
+variable "name" {
+  description = "The name of the API Gateway"
+  type        = string
+}
+
 # See https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions.html for additional 
 # configuration information.
 variable "openapi_config" {
@@ -11,10 +16,6 @@ variable "endpoint_type" {
   description = "The type of the endpoint. One of - PUBLIC, PRIVATE, REGIONAL"
   default     = ["REGIONAL"]
 
-  # validation {
-  #   condition     = contains(["EDGE", "REGIONAL", "PRIVATE"], var.endpoint_type)
-  #   error_message = "Valid values for var: endpoint_type are (EDGE, REGIONAL, PRIVATE)."
-  # }
 }
 
 variable "logging_level" {
@@ -22,10 +23,6 @@ variable "logging_level" {
   description = "The logging level of the API. One of - OFF, INFO, ERROR"
   default     = null
 
-  # validation {
-  #   condition     = contains(["OFF", "INFO", "ERROR"], var.logging_level)
-  #   error_message = "Valid values for var: logging_level are (OFF, INFO, ERROR)."
-  # }
 }
 
 variable "metrics_enabled" {
@@ -72,32 +69,6 @@ variable "access_log_format" {
   EOF
 }
 
-# See https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-resource-policies.html for additional
-# information on how to configure resource policies.
-#
-# Example:
-# {
-#    "Version": "2012-10-17",
-#    "Statement": [
-#        {
-#            "Effect": "Allow",
-#            "Principal": "*",
-#            "Action": "execute-api:Invoke",
-#            "Resource": "arn:aws:execute-api:us-east-1:000000000000:*"
-#        },
-#        {
-#            "Effect": "Deny",
-#            "Principal": "*",
-#            "Action": "execute-api:Invoke",
-#            "Resource": "arn:aws:execute-api:region:account-id:*",
-#            "Condition": {
-#                "NotIpAddress": {
-#                    "aws:SourceIp": "123.4.5.6/24"
-#                }
-#            }
-#        }
-#    ]
-#}
 variable "rest_api_policy" {
   description = "The IAM policy document for the API."
   type        = string
@@ -413,4 +384,10 @@ variable "base_path_mappings" {
     base_path : optional(string)
   }))
   default = {}
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
