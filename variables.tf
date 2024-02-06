@@ -39,7 +39,7 @@ variable "resources" {
     path_part : string
     parent_path_part : string
     depth : number
-    methods : optional(map(object({
+    methods : map(object({
       authorization : string
       authorizer_id : optional(string)
       authorization_scopes : optional(list(string))
@@ -74,7 +74,7 @@ variable "resources" {
           selection_pattern : optional(string)
         })))
       }))
-    })))
+    }))
   }))
   default = {}
 }
@@ -131,8 +131,8 @@ variable "gateway_responses" {
   description = "A map of gateway response objects keyed by response type"
   type = map(object({
     status_code : string
-    response_templates : optional(map(string))
-    response_parameters : optional(map(string))
+    response_templates : map(string)
+    response_parameters : map(string)
   }))
   default = {}
 }
@@ -141,7 +141,7 @@ variable "models" {
   description = "A map of model objects keyed by model name"
   type = map(object({
     content_type : string
-    description : optional(string)
+    description : string
     schema : string
   }))
   default = {}
@@ -151,8 +151,8 @@ variable "base_path_mappings" {
   description = "A map of base path mappings to create for the API Gateway"
   type = map(object({
     domain_name : string
-    stage_name : optional(string)
-    base_path : optional(string)
+    stage_name : string
+    base_path : string
   }))
   default = {}
 }
