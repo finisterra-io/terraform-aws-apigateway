@@ -1,3 +1,9 @@
+variable "enabled" {
+  description = "A flag to enable/disable the API Gateway"
+  type        = bool
+  default     = true
+}
+
 variable "name" {
   description = "The name of the API Gateway"
   type        = string
