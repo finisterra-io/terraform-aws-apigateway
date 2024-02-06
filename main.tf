@@ -316,9 +316,8 @@ locals {
         request_models       = method_info.request_models
         request_validator_id = method_info.request_validator_id
         request_parameters   = method_info.request_parameters
-        // Set integration to null if it doesn't exist to make it explicit
-        integration      = lookup(method_info, "integration", null)
-        method_responses = lookup(method_info, "method_responses", null)
+        integration          = lookup(method_info, "integration", null)
+        method_responses     = lookup(method_info, "method_responses", null)
       }
     }
   ]...)
