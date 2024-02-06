@@ -41,39 +41,39 @@ variable "resources" {
     depth : number
     methods : map(object({
       authorization : string
-      authorizer_id : optional(string)
-      authorization_scopes : optional(list(string))
-      api_key_required : optional(bool)
-      operation_name : optional(string)
-      request_models : optional(map(any))
-      request_validator_id : optional(string)
-      request_parameters : optional(map(bool))
-      method_responses : optional(map(object({
-        response_models : optional(map(any))
-        response_parameters : optional(map(bool))
-      })))
-      integration : optional(object({
+      authorizer_id : string
+      authorization_scopes : list(string)
+      api_key_required : bool
+      operation_name : string
+      request_models : map(any)
+      request_validator_id : string
+      request_parameters : map(bool)
+      method_responses : map(object({
+        response_models : map(any)
+        response_parameters : map(bool)
+      }))
+      integration : object({
         integration_http_method : string
         type : string
-        connection_type : optional(string)
-        connection_id : optional(string)
+        connection_type : string
+        connection_id : string
         uri : string
-        credentials : optional(string)
-        request_templates : optional(map(string))
-        request_parameters : optional(map(string))
-        passthrough_behavior : optional(string)
-        cache_key_parameters : optional(list(string))
-        cache_namespace : optional(string)
-        content_handling : optional(string)
-        timeout_milliseconds : optional(number)
-        tls_config : optional(list(any))
-        responses : optional(map(object({
-          response_templates : optional(map(string))
-          response_parameters : optional(map(bool))
-          content_handling : optional(string)
-          selection_pattern : optional(string)
-        })))
-      }))
+        credentials : string
+        request_templates : map(string)
+        request_parameters : map(string)
+        passthrough_behavior : string
+        cache_key_parameters : list(string)
+        cache_namespace : string
+        content_handling : string
+        timeout_milliseconds : number
+        tls_config : list(any)
+        responses : map(object({
+          response_templates : map(string)
+          response_parameters : map(bool)
+          content_handling : string
+          selection_pattern : string
+        }))
+      })
     }))
   }))
   default = {}
