@@ -20,9 +20,3 @@ resource "aws_api_gateway_domain_name" "this" {
   regional_certificate_arn               = var.regional_certificate_arn
   tags                                   = var.tags
 }
-
-
-
-
-
-
