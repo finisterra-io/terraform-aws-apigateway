@@ -67,7 +67,7 @@ variable "resources" {
         content_handling : optional(string)
         timeout_milliseconds : optional(number)
         tls_config : optional(list(any))
-        responses : optional(map(object({ // <-- New field added
+        responses : optional(map(object({
           response_templates : optional(map(string))
           response_parameters : optional(map(bool))
           content_handling : optional(string)
@@ -122,8 +122,9 @@ variable "endpoint_configuration" {
 }
 
 variable "put_rest_api_mode" {
-  type    = string
-  default = null
+  type        = string
+  description = "The mode for putting the API Gateway. Valid values are merge and overwrite. By default, merge is used."
+  default     = null
 }
 
 variable "gateway_responses" {
