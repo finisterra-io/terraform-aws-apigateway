@@ -39,42 +39,42 @@ variable "resources" {
     path_part : string
     parent_path_part : string
     depth : number
-    methods : map(object({
+    methods : optional(map(object({
       authorization : string
-      authorizer_id : string
-      authorization_scopes : list(string)
-      api_key_required : bool
-      operation_name : string
-      request_models : map(any)
-      request_validator_id : string
-      request_parameters : map(bool)
-      method_responses : map(object({
-        response_models : map(any)
-        response_parameters : map(bool)
-      }))
-      integration : object({
+      authorizer_id : optional(string)
+      authorization_scopes : optional(list(string))
+      api_key_required : optional(bool)
+      operation_name : optional(string)
+      request_models : optional(map(any))
+      request_validator_id : optional(string)
+      request_parameters : optional(map(bool))
+      method_responses : optional(map(object({
+        response_models : optional(map(any))
+        response_parameters : optional(map(bool))
+      })))
+      integration : optional(object({
         integration_http_method : string
         type : string
-        connection_type : string
-        connection_id : string
+        connection_type : optional(string)
+        connection_id : optional(string)
         uri : string
-        credentials : string
-        request_templates : map(string)
-        request_parameters : map(string)
-        passthrough_behavior : string
-        cache_key_parameters : list(string)
-        cache_namespace : string
-        content_handling : string
-        timeout_milliseconds : number
-        tls_config : list(any)
-        responses : map(object({
-          response_templates : map(string)
-          response_parameters : map(bool)
-          content_handling : string
-          selection_pattern : string
-        }))
-      })
-    }))
+        credentials : optional(string)
+        request_templates : optional(map(string))
+        request_parameters : optional(map(string))
+        passthrough_behavior : optional(string)
+        cache_key_parameters : optional(list(string))
+        cache_namespace : optional(string)
+        content_handling : optional(string)
+        timeout_milliseconds : optional(number)
+        tls_config : optional(list(any))
+        responses : optional(map(object({ // <-- New field added
+          response_templates : optional(map(string))
+          response_parameters : optional(map(bool))
+          content_handling : optional(string)
+          selection_pattern : optional(string)
+        })))
+      }))
+    })))
   }))
   default = {}
 }
@@ -131,8 +131,8 @@ variable "gateway_responses" {
   description = "A map of gateway response objects keyed by response type"
   type = map(object({
     status_code : string
-    response_templates : map(string)
-    response_parameters : map(string)
+    response_templates : optional(map(string))
+    response_parameters : optional(map(string))
   }))
   default = {}
 }
@@ -141,7 +141,7 @@ variable "models" {
   description = "A map of model objects keyed by model name"
   type = map(object({
     content_type : string
-    description : string
+    description : optional(string)
     schema : string
   }))
   default = {}
@@ -151,8 +151,8 @@ variable "base_path_mappings" {
   description = "A map of base path mappings to create for the API Gateway"
   type = map(object({
     domain_name : string
-    stage_name : string
-    base_path : string
+    stage_name : optional(string)
+    base_path : optional(string)
   }))
   default = {}
 }
