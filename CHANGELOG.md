@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.0.2](https://github.com/finisterra-io/terraform-aws-apigateway/compare/v1.0.1...v1.0.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* optional vars ([c8820da](https://github.com/finisterra-io/terraform-aws-apigateway/commit/c8820da7035c2c996486472bca22c783ceba9c27))
+
 ### [1.0.1](https://github.com/finisterra-io/terraform-aws-apigateway/compare/v1.0.0...v1.0.1) (2024-02-07)
 
 
