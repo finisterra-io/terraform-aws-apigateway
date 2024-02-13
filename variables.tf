@@ -47,17 +47,17 @@ variable "resources" {
       operation_name : optional(string)
       request_models : optional(map(any))
       request_validator_id : optional(string)
-      request_parameters : optional(map(bool))
+      request_parameters : optional(map(any))
       method_responses : optional(map(object({
         response_models : optional(map(any))
-        response_parameters : optional(map(bool))
+        response_parameters : optional(map(any))
       })))
       integration : optional(object({
-        integration_http_method : string
+        integration_http_method : optional(string)
         type : string
         connection_type : optional(string)
         connection_id : optional(string)
-        uri : string
+        uri : optional(string)
         credentials : optional(string)
         request_templates : optional(map(string))
         request_parameters : optional(map(string))
@@ -69,7 +69,7 @@ variable "resources" {
         tls_config : optional(list(any))
         responses : optional(map(object({
           response_templates : optional(map(string))
-          response_parameters : optional(map(bool))
+          response_parameters : optional(map(any))
           content_handling : optional(string)
           selection_pattern : optional(string)
         })))
@@ -130,7 +130,7 @@ variable "put_rest_api_mode" {
 variable "gateway_responses" {
   description = "A map of gateway response objects keyed by response type"
   type = map(object({
-    status_code : string
+    status_code : optional(string)
     response_templates : optional(map(string))
     response_parameters : optional(map(string))
   }))
