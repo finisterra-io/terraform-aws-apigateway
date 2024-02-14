@@ -57,10 +57,6 @@ resource "aws_api_gateway_deployment" "this" {
   rest_api_id = aws_api_gateway_rest_api.this[0].id
   description = try(each.value.description, "")
 
-  # triggers = {
-  #   redeployment = sha1(jsonencode(aws_api_gateway_rest_api.this[0].body))
-  # }
-
   lifecycle {
     create_before_destroy = true
   }
@@ -90,8 +86,8 @@ resource "aws_api_gateway_stage" "this" {
   deployment_id         = aws_api_gateway_deployment.this[each.value.deployment_id].id
   rest_api_id           = aws_api_gateway_rest_api.this[0].id
   stage_name            = each.value.stage_id
-  xray_tracing_enabled  = each.value.stage.xray_tracing_enabled
-  cache_cluster_enabled = each.value.stage.cache_cluster_enabled
+  xray_tracing_enabled  = try(each.value.stage.xray_tracing_enabled, null)
+  cache_cluster_enabled = try(each.value.stage.cache_cluster_enabled, null)
   cache_cluster_size    = try(each.value.stage.cache_cluster_size, null)
   description           = try(each.value.stage.description, "")
 
@@ -119,16 +115,16 @@ resource "aws_api_gateway_method_settings" "all" {
   method_path = each.value.method_path
 
   settings {
-    cache_data_encrypted                       = each.value.cache_data_encrypted
-    cache_ttl_in_seconds                       = each.value.cache_ttl_in_seconds
-    caching_enabled                            = each.value.caching_enabled
-    data_trace_enabled                         = each.value.data_trace_enabled
-    logging_level                              = each.value.logging_level
-    metrics_enabled                            = each.value.metrics_enabled
-    require_authorization_for_cache_control    = each.value.require_authorization_for_cache_control
-    throttling_burst_limit                     = each.value.throttling_burst_limit
-    throttling_rate_limit                      = each.value.throttling_rate_limit
-    unauthorized_cache_control_header_strategy = each.value.unauthorized_cache_control_header_strategy
+    cache_data_encrypted                       = try(each.value.cache_data_encrypted, null)
+    cache_ttl_in_seconds                       = try(each.value.cache_ttl_in_seconds, null)
+    caching_enabled                            = try(each.value.caching_enabled, null)
+    data_trace_enabled                         = try(each.value.data_trace_enabled, null)
+    logging_level                              = try(each.value.logging_level, null)
+    metrics_enabled                            = try(each.value.metrics_enabled, null)
+    require_authorization_for_cache_control    = try(each.value.require_authorization_for_cache_control, null)
+    throttling_burst_limit                     = try(each.value.throttling_burst_limit, null)
+    throttling_rate_limit                      = try(each.value.throttling_rate_limit, null)
+    unauthorized_cache_control_header_strategy = try(each.value.unauthorized_cache_control_header_strategy, null)
   }
 }
 
@@ -309,15 +305,15 @@ locals {
         path_part            = info.path_part
         depth                = info.depth
         authorization        = method_info.authorization
-        authorizer_id        = method_info.authorizer_id
-        authorization_scopes = method_info.authorization_scopes
-        api_key_required     = method_info.api_key_required
-        operation_name       = method_info.operation_name
-        request_models       = method_info.request_models
-        request_validator_id = method_info.request_validator_id
-        request_parameters   = method_info.request_parameters
-        integration          = lookup(method_info, "integration", null)
-        method_responses     = lookup(method_info, "method_responses", null)
+        authorizer_id        = try(method_info.authorizer_id, null)
+        authorization_scopes = try(method_info.authorization_scopes, null)
+        api_key_required     = try(method_info.api_key_required, null)
+        operation_name       = try(method_info.operation_name, null)
+        request_models       = try(method_info.request_models, null)
+        request_validator_id = try(method_info.request_validator_id, null)
+        request_parameters   = try(method_info.request_parameters, null)
+        integration          = try(method_info.integration, null)
+        method_responses     = try(method_info.method_responses, null)
       }
     }
   ]...)
@@ -665,20 +661,20 @@ resource "aws_api_gateway_integration" "depth_0" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_0[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -696,20 +692,20 @@ resource "aws_api_gateway_integration" "depth_1" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_1[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -727,20 +723,20 @@ resource "aws_api_gateway_integration" "depth_2" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_2[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -758,20 +754,20 @@ resource "aws_api_gateway_integration" "depth_3" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_3[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -789,20 +785,20 @@ resource "aws_api_gateway_integration" "depth_4" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_4[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -820,20 +816,20 @@ resource "aws_api_gateway_integration" "depth_5" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_5[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -851,20 +847,20 @@ resource "aws_api_gateway_integration" "depth_6" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_6[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -882,20 +878,20 @@ resource "aws_api_gateway_integration" "depth_7" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_7[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -913,20 +909,20 @@ resource "aws_api_gateway_integration" "depth_8" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_8[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -944,20 +940,20 @@ resource "aws_api_gateway_integration" "depth_9" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_9[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -975,20 +971,20 @@ resource "aws_api_gateway_integration" "depth_10" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_10[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1006,20 +1002,20 @@ resource "aws_api_gateway_integration" "depth_11" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_11[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1037,20 +1033,20 @@ resource "aws_api_gateway_integration" "depth_12" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_12[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1068,20 +1064,20 @@ resource "aws_api_gateway_integration" "depth_13" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_13[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1099,20 +1095,20 @@ resource "aws_api_gateway_integration" "depth_14" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_14[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1130,20 +1126,20 @@ resource "aws_api_gateway_integration" "depth_15" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_15[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1161,20 +1157,20 @@ resource "aws_api_gateway_integration" "depth_16" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_16[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1192,20 +1188,20 @@ resource "aws_api_gateway_integration" "depth_17" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_17[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1223,20 +1219,20 @@ resource "aws_api_gateway_integration" "depth_18" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_18[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1254,20 +1250,20 @@ resource "aws_api_gateway_integration" "depth_19" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_19[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1285,20 +1281,20 @@ resource "aws_api_gateway_integration" "depth_20" {
 
   rest_api_id             = aws_api_gateway_rest_api.this[0].id
   resource_id             = aws_api_gateway_resource.depth_20[each.value.path].id
-  http_method             = each.value.method
-  integration_http_method = try(each.value.integration.integration_http_method)
-  type                    = each.value.integration.type
-  connection_type         = each.value.integration.connection_type
-  connection_id           = each.value.integration.connection_id
-  uri                     = try(each.value.integration.uri)
-  credentials             = each.value.integration.credentials
-  request_templates       = each.value.integration.request_templates
-  request_parameters      = each.value.integration.request_parameters
-  passthrough_behavior    = each.value.integration.passthrough_behavior
-  cache_key_parameters    = each.value.integration.cache_key_parameters
-  cache_namespace         = each.value.integration.cache_namespace
-  content_handling        = each.value.integration.content_handling != "" ? each.value.integration.content_handling : null
-  timeout_milliseconds    = each.value.integration.timeout_milliseconds
+  http_method             = try(each.value.method, null)
+  integration_http_method = try(each.value.integration.integration_http_method, null)
+  type                    = try(each.value.integration.type, null)
+  connection_type         = try(each.value.integration.connection_type, null)
+  connection_id           = try(each.value.integration.connection_id, null)
+  uri                     = try(each.value.integration.uri, null)
+  credentials             = try(each.value.integration.credentials, null)
+  request_templates       = try(each.value.integration.request_templates, null)
+  request_parameters      = try(each.value.integration.request_parameters, null)
+  passthrough_behavior    = try(each.value.integration.passthrough_behavior, null)
+  cache_key_parameters    = try(each.value.integration.cache_key_parameters, null)
+  cache_namespace         = try(each.value.integration.cache_namespace, null)
+  content_handling        = try(each.value.integration.content_handling, null)
+  timeout_milliseconds    = try(each.value.integration.timeout_milliseconds, null)
 
   dynamic "tls_config" {
     for_each = try(each.value.integration.tls_config != null ? each.value.integration.tls_config : [], [])
@@ -1316,8 +1312,8 @@ locals {
         method              = details.method
         status_code         = status_code
         depth               = details.depth
-        response_models     = response.response_models != null ? response.response_models : {}
-        response_parameters = response.response_parameters != null ? response.response_parameters : {}
+        response_models     = try(response.response_models, {})
+        response_parameters = try(response.response_parameters, {})
       }
     }
   ]...)
@@ -1333,8 +1329,8 @@ resource "aws_api_gateway_method_response" "depth_0" {
   resource_id         = aws_api_gateway_resource.depth_0[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_1" {
@@ -1347,8 +1343,8 @@ resource "aws_api_gateway_method_response" "depth_1" {
   resource_id         = aws_api_gateway_resource.depth_1[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_2" {
@@ -1361,8 +1357,8 @@ resource "aws_api_gateway_method_response" "depth_2" {
   resource_id         = aws_api_gateway_resource.depth_2[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_3" {
@@ -1375,8 +1371,8 @@ resource "aws_api_gateway_method_response" "depth_3" {
   resource_id         = aws_api_gateway_resource.depth_3[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_4" {
@@ -1389,8 +1385,8 @@ resource "aws_api_gateway_method_response" "depth_4" {
   resource_id         = aws_api_gateway_resource.depth_4[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_5" {
@@ -1403,8 +1399,8 @@ resource "aws_api_gateway_method_response" "depth_5" {
   resource_id         = aws_api_gateway_resource.depth_5[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_6" {
@@ -1417,8 +1413,8 @@ resource "aws_api_gateway_method_response" "depth_6" {
   resource_id         = aws_api_gateway_resource.depth_6[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_7" {
@@ -1431,8 +1427,8 @@ resource "aws_api_gateway_method_response" "depth_7" {
   resource_id         = aws_api_gateway_resource.depth_7[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_8" {
@@ -1445,8 +1441,8 @@ resource "aws_api_gateway_method_response" "depth_8" {
   resource_id         = aws_api_gateway_resource.depth_8[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_9" {
@@ -1459,8 +1455,8 @@ resource "aws_api_gateway_method_response" "depth_9" {
   resource_id         = aws_api_gateway_resource.depth_9[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_10" {
@@ -1473,8 +1469,8 @@ resource "aws_api_gateway_method_response" "depth_10" {
   resource_id         = aws_api_gateway_resource.depth_10[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 
@@ -1489,8 +1485,8 @@ resource "aws_api_gateway_method_response" "depth_11" {
   resource_id         = aws_api_gateway_resource.depth_11[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_12" {
@@ -1503,8 +1499,8 @@ resource "aws_api_gateway_method_response" "depth_12" {
   resource_id         = aws_api_gateway_resource.depth_12[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_13" {
@@ -1517,8 +1513,8 @@ resource "aws_api_gateway_method_response" "depth_13" {
   resource_id         = aws_api_gateway_resource.depth_13[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_14" {
@@ -1531,8 +1527,8 @@ resource "aws_api_gateway_method_response" "depth_14" {
   resource_id         = aws_api_gateway_resource.depth_14[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_15" {
@@ -1545,8 +1541,8 @@ resource "aws_api_gateway_method_response" "depth_15" {
   resource_id         = aws_api_gateway_resource.depth_15[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_16" {
@@ -1559,8 +1555,8 @@ resource "aws_api_gateway_method_response" "depth_16" {
   resource_id         = aws_api_gateway_resource.depth_16[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_17" {
@@ -1573,8 +1569,8 @@ resource "aws_api_gateway_method_response" "depth_17" {
   resource_id         = aws_api_gateway_resource.depth_17[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_18" {
@@ -1587,8 +1583,8 @@ resource "aws_api_gateway_method_response" "depth_18" {
   resource_id         = aws_api_gateway_resource.depth_18[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_19" {
@@ -1601,8 +1597,8 @@ resource "aws_api_gateway_method_response" "depth_19" {
   resource_id         = aws_api_gateway_resource.depth_19[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_method_response" "depth_20" {
@@ -1615,8 +1611,8 @@ resource "aws_api_gateway_method_response" "depth_20" {
   resource_id         = aws_api_gateway_resource.depth_20[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  response_models     = each.value.response_models
-  response_parameters = each.value.response_parameters
+  response_models     = try(each.value.response_models, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 locals {
@@ -1627,11 +1623,10 @@ locals {
         method              = details.method
         status_code         = status_code
         depth               = details.depth
-        response_templates  = length(keys(response.response_templates)) > 0 ? response.response_templates : { "application/json" : "" }
-        response_parameters = response.response_parameters != null ? response.response_parameters : {}
-        content_handling    = response.content_handling != "" ? response.content_handling : null
-        selection_pattern   = response.selection_pattern != "" ? response.selection_pattern : null
-
+        response_templates  = try(response.response_templates, { "application/json" : "" })
+        response_parameters = try(response.response_parameters, {})
+        content_handling    = try(response.content_handling, null)
+        selection_pattern   = try(response.selection_pattern, null)
       }
     }
   ]...)
@@ -1647,10 +1642,10 @@ resource "aws_api_gateway_integration_response" "depth_0" {
   resource_id         = aws_api_gateway_resource.depth_0[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_1" {
@@ -1663,10 +1658,10 @@ resource "aws_api_gateway_integration_response" "depth_1" {
   resource_id         = aws_api_gateway_resource.depth_1[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_2" {
@@ -1679,10 +1674,10 @@ resource "aws_api_gateway_integration_response" "depth_2" {
   resource_id         = aws_api_gateway_resource.depth_2[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_3" {
@@ -1695,10 +1690,10 @@ resource "aws_api_gateway_integration_response" "depth_3" {
   resource_id         = aws_api_gateway_resource.depth_3[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 
@@ -1712,10 +1707,10 @@ resource "aws_api_gateway_integration_response" "depth_4" {
   resource_id         = aws_api_gateway_resource.depth_4[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_5" {
@@ -1728,10 +1723,10 @@ resource "aws_api_gateway_integration_response" "depth_5" {
   resource_id         = aws_api_gateway_resource.depth_5[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_6" {
@@ -1744,10 +1739,10 @@ resource "aws_api_gateway_integration_response" "depth_6" {
   resource_id         = aws_api_gateway_resource.depth_6[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_7" {
@@ -1760,10 +1755,10 @@ resource "aws_api_gateway_integration_response" "depth_7" {
   resource_id         = aws_api_gateway_resource.depth_7[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_8" {
@@ -1776,10 +1771,10 @@ resource "aws_api_gateway_integration_response" "depth_8" {
   resource_id         = aws_api_gateway_resource.depth_8[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_9" {
@@ -1792,10 +1787,10 @@ resource "aws_api_gateway_integration_response" "depth_9" {
   resource_id         = aws_api_gateway_resource.depth_9[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_10" {
@@ -1808,10 +1803,10 @@ resource "aws_api_gateway_integration_response" "depth_10" {
   resource_id         = aws_api_gateway_resource.depth_10[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_11" {
@@ -1824,10 +1819,10 @@ resource "aws_api_gateway_integration_response" "depth_11" {
   resource_id         = aws_api_gateway_resource.depth_11[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_12" {
@@ -1840,10 +1835,10 @@ resource "aws_api_gateway_integration_response" "depth_12" {
   resource_id         = aws_api_gateway_resource.depth_12[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_13" {
@@ -1856,10 +1851,10 @@ resource "aws_api_gateway_integration_response" "depth_13" {
   resource_id         = aws_api_gateway_resource.depth_13[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_14" {
@@ -1872,10 +1867,10 @@ resource "aws_api_gateway_integration_response" "depth_14" {
   resource_id         = aws_api_gateway_resource.depth_14[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_15" {
@@ -1888,10 +1883,10 @@ resource "aws_api_gateway_integration_response" "depth_15" {
   resource_id         = aws_api_gateway_resource.depth_15[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_16" {
@@ -1904,10 +1899,10 @@ resource "aws_api_gateway_integration_response" "depth_16" {
   resource_id         = aws_api_gateway_resource.depth_16[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_17" {
@@ -1920,10 +1915,10 @@ resource "aws_api_gateway_integration_response" "depth_17" {
   resource_id         = aws_api_gateway_resource.depth_17[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_18" {
@@ -1936,10 +1931,10 @@ resource "aws_api_gateway_integration_response" "depth_18" {
   resource_id         = aws_api_gateway_resource.depth_18[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_19" {
@@ -1952,10 +1947,10 @@ resource "aws_api_gateway_integration_response" "depth_19" {
   resource_id         = aws_api_gateway_resource.depth_19[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
 
 resource "aws_api_gateway_integration_response" "depth_20" {
@@ -1968,8 +1963,8 @@ resource "aws_api_gateway_integration_response" "depth_20" {
   resource_id         = aws_api_gateway_resource.depth_20[each.value.path].id
   http_method         = each.value.method
   status_code         = each.value.status_code
-  content_handling    = each.value.content_handling
-  selection_pattern   = each.value.selection_pattern
-  response_templates  = each.value.response_templates
-  response_parameters = each.value.response_parameters
+  content_handling    = try(each.value.content_handling, null)
+  selection_pattern   = try(each.value.selection_pattern, null)
+  response_templates  = try(each.value.response_templates, null)
+  response_parameters = try(each.value.response_parameters, null)
 }
