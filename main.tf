@@ -1623,7 +1623,7 @@ locals {
         method              = details.method
         status_code         = status_code
         depth               = details.depth
-        response_templates  = try(response.response_templates, { "application/json" : "" })
+        response_templates  = length(keys(try(response.response_templates, {}))) > 0 ? response.response_templates : { "application/json" : "" }
         response_parameters = try(response.response_parameters, {})
         content_handling    = try(response.content_handling, null)
         selection_pattern   = try(response.selection_pattern, null)
