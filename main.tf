@@ -682,6 +682,13 @@ resource "aws_api_gateway_integration" "depth_0" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
+
 }
 
 resource "aws_api_gateway_integration" "depth_1" {
@@ -712,6 +719,12 @@ resource "aws_api_gateway_integration" "depth_1" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -744,6 +757,12 @@ resource "aws_api_gateway_integration" "depth_2" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_3" {
@@ -774,6 +793,12 @@ resource "aws_api_gateway_integration" "depth_3" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -806,6 +831,12 @@ resource "aws_api_gateway_integration" "depth_4" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_5" {
@@ -836,6 +867,11 @@ resource "aws_api_gateway_integration" "depth_5" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -868,6 +904,12 @@ resource "aws_api_gateway_integration" "depth_6" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_7" {
@@ -898,6 +940,12 @@ resource "aws_api_gateway_integration" "depth_7" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -930,6 +978,12 @@ resource "aws_api_gateway_integration" "depth_8" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_9" {
@@ -960,6 +1014,12 @@ resource "aws_api_gateway_integration" "depth_9" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -992,6 +1052,12 @@ resource "aws_api_gateway_integration" "depth_10" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_11" {
@@ -1022,6 +1088,12 @@ resource "aws_api_gateway_integration" "depth_11" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -1054,6 +1126,12 @@ resource "aws_api_gateway_integration" "depth_12" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_13" {
@@ -1084,6 +1162,12 @@ resource "aws_api_gateway_integration" "depth_13" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -1116,6 +1200,12 @@ resource "aws_api_gateway_integration" "depth_14" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_15" {
@@ -1146,6 +1236,12 @@ resource "aws_api_gateway_integration" "depth_15" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -1178,6 +1274,12 @@ resource "aws_api_gateway_integration" "depth_16" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_17" {
@@ -1208,6 +1310,12 @@ resource "aws_api_gateway_integration" "depth_17" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -1240,6 +1348,12 @@ resource "aws_api_gateway_integration" "depth_18" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_19" {
@@ -1271,6 +1385,12 @@ resource "aws_api_gateway_integration" "depth_19" {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration" "depth_20" {
@@ -1301,6 +1421,12 @@ resource "aws_api_gateway_integration" "depth_20" {
     content {
       insecure_skip_verification = try(tls_config.value.insecure_skip_verification, null)
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      request_templates,
+    ]
   }
 }
 
@@ -1623,7 +1749,7 @@ locals {
         method              = details.method
         status_code         = status_code
         depth               = details.depth
-        response_templates  = length(keys(try(response.response_templates, {}))) > 0 ? response.response_templates : { "application/json" : "" }
+        response_templates  = try(response.response_templates, null)
         response_parameters = try(response.response_parameters, {})
         content_handling    = try(response.content_handling, null)
         selection_pattern   = try(response.selection_pattern, null)
@@ -1646,6 +1772,12 @@ resource "aws_api_gateway_integration_response" "depth_0" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_1" {
@@ -1662,6 +1794,12 @@ resource "aws_api_gateway_integration_response" "depth_1" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_2" {
@@ -1678,6 +1816,12 @@ resource "aws_api_gateway_integration_response" "depth_2" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_3" {
@@ -1694,6 +1838,12 @@ resource "aws_api_gateway_integration_response" "depth_3" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 
@@ -1711,6 +1861,12 @@ resource "aws_api_gateway_integration_response" "depth_4" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_5" {
@@ -1727,6 +1883,12 @@ resource "aws_api_gateway_integration_response" "depth_5" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_6" {
@@ -1743,6 +1905,12 @@ resource "aws_api_gateway_integration_response" "depth_6" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_7" {
@@ -1759,6 +1927,12 @@ resource "aws_api_gateway_integration_response" "depth_7" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_8" {
@@ -1775,6 +1949,12 @@ resource "aws_api_gateway_integration_response" "depth_8" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_9" {
@@ -1791,6 +1971,12 @@ resource "aws_api_gateway_integration_response" "depth_9" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_10" {
@@ -1807,6 +1993,12 @@ resource "aws_api_gateway_integration_response" "depth_10" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_11" {
@@ -1823,6 +2015,12 @@ resource "aws_api_gateway_integration_response" "depth_11" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_12" {
@@ -1839,6 +2037,12 @@ resource "aws_api_gateway_integration_response" "depth_12" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_13" {
@@ -1855,6 +2059,12 @@ resource "aws_api_gateway_integration_response" "depth_13" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_14" {
@@ -1871,6 +2081,12 @@ resource "aws_api_gateway_integration_response" "depth_14" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_15" {
@@ -1887,6 +2103,12 @@ resource "aws_api_gateway_integration_response" "depth_15" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_16" {
@@ -1903,6 +2125,12 @@ resource "aws_api_gateway_integration_response" "depth_16" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_17" {
@@ -1919,6 +2147,12 @@ resource "aws_api_gateway_integration_response" "depth_17" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_18" {
@@ -1935,6 +2169,12 @@ resource "aws_api_gateway_integration_response" "depth_18" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_19" {
@@ -1951,6 +2191,12 @@ resource "aws_api_gateway_integration_response" "depth_19" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
 
 resource "aws_api_gateway_integration_response" "depth_20" {
@@ -1967,4 +2213,10 @@ resource "aws_api_gateway_integration_response" "depth_20" {
   selection_pattern   = try(each.value.selection_pattern, null)
   response_templates  = try(each.value.response_templates, null)
   response_parameters = try(each.value.response_parameters, null)
+
+  lifecycle {
+    ignore_changes = [
+      response_templates,
+    ]
+  }
 }
