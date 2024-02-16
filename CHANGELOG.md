@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.0.5](https://github.com/finisterra-io/terraform-aws-apigateway/compare/v1.0.4...v1.0.5) (2024-02-16)
+
+
+### Bug Fixes
+
+* life cycle ([5ed62c5](https://github.com/finisterra-io/terraform-aws-apigateway/commit/5ed62c5b1e0caaa8b6ef1db301cfc4e3a61342be))
+
 ### [1.0.4](https://github.com/finisterra-io/terraform-aws-apigateway/compare/v1.0.3...v1.0.4) (2024-02-16)
 
 
