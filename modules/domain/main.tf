@@ -1,7 +1,8 @@
 resource "aws_api_gateway_domain_name" "this" {
-  count           = var.enabled ? 1 : 0
-  domain_name     = var.domain_name
-  certificate_arn = var.certificate_arn
+  count            = var.enabled ? 1 : 0
+  domain_name      = var.domain_name
+  certificate_arn  = var.certificate_arn
+  certificate_name = var.certificate_name
   dynamic "endpoint_configuration" {
     for_each = var.endpoint_configuration
     content {
