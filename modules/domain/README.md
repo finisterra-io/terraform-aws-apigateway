@@ -29,6 +29,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | The ARN of the certificate | `string` | `null` | no |
+| <a name="input_certificate_name"></a> [certificate\_name](#input\_certificate\_name) | The name of the certificate | `string` | `null` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The domain name of the API Gateway | `string` | n/a | yes |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
 | <a name="input_endpoint_configuration"></a> [endpoint\_configuration](#input\_endpoint\_configuration) | A list of endpoint types. This resource currently only supports managing a single endpoint. | <pre>list(object({<br>    types = list(string)<br>  }))</pre> | `[]` | no |

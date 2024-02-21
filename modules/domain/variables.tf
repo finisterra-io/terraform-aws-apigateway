@@ -15,6 +15,12 @@ variable "certificate_arn" {
   default     = null
 }
 
+variable "certificate_name" {
+  type        = string
+  description = "The name of the certificate"
+  default     = null
+}
+
 variable "endpoint_configuration" {
   type = list(object({
     types = list(string)
